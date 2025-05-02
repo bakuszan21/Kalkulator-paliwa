@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulator Paliwa</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      max-width: 400px;
+      margin: 30px auto;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    }
+    h2 {
+      text-align: center;
+      color: #00c853;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      background-color: #1f1f1f;
+      color: white;
+    }
+    button {
+      background-color: #00c853;
+      color: black;
+      font-weight: bold;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #00b248;
+    }
+    #result {
+      margin-top: 20px;
+      background-color: #1e1e1e;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h2>💸 Kalkulator Paliwa</h2>
+
+  <label for="fuelType">Rodzaj paliwa:</label>
+  <select id="fuelType" onchange="updateFuelPrice()">
+    <option value="benzyna95">Benzyna 95</option>
+    <option value="benzyna98">Benzyna 98</option>
+    <option value="diesel">Diesel</option>
+    <option value="lpg">LPG</option>
+  </select>
+
+  <label for="distance">Dystans (km):</label>
+  <input type="number" id="distance" placeholder="Np. 150">
+
+  <label for="consumption">Średnie spalanie (l/100km):</label>
+  <input type="number" id="consumption" placeholder="Np. 7.5">
+
+  <label for="price">Cena paliwa (zł/l):</label>
+  <input type="number" id="price" placeholder="Np. 5.81">
+
+  <label for="people">Liczba osób w aucie:</label>
+  <input type="number" id="people" placeholder="Np. 4">
+
+  <button onclick="calculate()">Oblicz</button>
+
+  <div id="result"></div>
+
+  <script>
+    const fuelPrices = {
+      benzyna95: 5.81,
+      benzyna98: 6.50,
+      diesel: 5.90,
+      lpg: 2.97
+    };
+
+    function updateFuelPrice() {
+      const fuelType = document.getElementById('fuelType').value;
+      document.getElementById('price').value = fuelPrices[fuelType];
+    }
+
+    function calculate() {
+      const distance = parseFloat(document.getElementById('distance').value);
+      const consumption = parseFloat(document.getElementById('consumption').value);
+      const price = parseFloat(document.getElementById('price').value);
+      const people = parseInt(document.getElementById('people').value);
+
+      const resultBox = document.getElementById('result');
+
+      if (isNaN(distance) || isNaN(consumption) || isNaN(price) || isNaN(people) || people <= 0) {
+        resultBox.textContent = '⚠️ Wprowadź poprawne dane!';
+        return;
+      }
+
+      const totalCost = (distance * consumption / 100) * price;
+      const perPerson = totalCost / people;
+
+      resultBox.innerHTML = `
+        🚗 Całkowity koszt: <strong>${totalCost.toFixed(2)} zł</strong><br>
+        👥 Na osobę: <strong>${perPerson.toFixed(2)} zł</strong>
+      `;
+    }
+
+    // Auto-wypełnienie ceny paliwa przy starcie
+    window.onload = updateFuelPrice;
+  </script>
+</body>
+</html>
